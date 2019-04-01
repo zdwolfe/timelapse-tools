@@ -1,6 +1,6 @@
 {
-  "name": "timelapse",
-  "homepage": "http://zdwolfe.github.io/timelapse",
+  "name": "timelapse-tools",
+  "homepage": "http://zdwolfe.github.io/timelapse-tools",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
