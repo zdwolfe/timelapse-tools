@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/timelapse-tools/precache-manifest.01da6d3c714953c5e6bbbbe17f47d6c6.js"
+  "/timelapse-tools/precache-manifest.2dc5f0ea9d5dcb2f328bbe2c9ad2c082.js"
 );
 
 workbox.clientsClaim();
