@@ -4,6 +4,7 @@ import { Form, Input, Select, Button } from 'antd';
 import { FormComponentProps } from "antd/es/form";
 
 const moment = require('moment');
+declare const gtag: (type: string, eventName: string) => {};
 
 interface ITimelapseFormProps extends FormComponentProps {
 }
@@ -146,7 +147,7 @@ class TimelapseFormImpl extends React.Component<ITimelapseFormProps> {
       recordingDuration=${recordingDuration}
       `
     );
-
+    gtag('event', 'UseTimelapseTool');
   }
 }
 
