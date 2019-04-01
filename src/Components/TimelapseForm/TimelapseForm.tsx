@@ -9,6 +9,7 @@ interface ITimelapseFormProps extends FormComponentProps {
 }
 
 class TimelapseFormImpl extends React.Component<ITimelapseFormProps> {
+
   public render() {
     const { getFieldDecorator } = this.props.form;
 
@@ -56,15 +57,6 @@ class TimelapseFormImpl extends React.Component<ITimelapseFormProps> {
           )}
         </Form.Item>
 
-        <Form.Item label={"Capture Duration"}>
-          {getFieldDecorator('recordingDuration', {
-            initialValue: 30,
-            rules: [{ required: false, message: 'Please input the expected recording time.' }],
-          })(
-            <Input addonAfter={recordingDurationUnitSelector} style={{ width: '100%' }} />
-          )}
-        </Form.Item>
-
         <Form.Item label={"Frames / sec"}>
           {getFieldDecorator('fps', {
             initialValue: 30,
@@ -87,7 +79,16 @@ class TimelapseFormImpl extends React.Component<ITimelapseFormProps> {
             initialValue: 6,
             rules: [{ required: false, message: 'Please input the expected frame interval.' }],
           })(
-            <Input addonAfter={recordingIntervalUnitSelector} style={{ width: '100%' }}  />
+            <Input addonAfter={recordingIntervalUnitSelector} style={{ width: '100%' }} />
+          )}
+        </Form.Item>
+
+
+        <Form.Item label={"Capture Duration"}>
+          {getFieldDecorator('recordingDuration', {
+            rules: [{ required: false, message: 'Please input the expected recording time.' }],
+          })(
+            <Input addonAfter={recordingDurationUnitSelector} style={{ width: '100%' }} />
           )}
         </Form.Item>
 
@@ -106,17 +107,20 @@ class TimelapseFormImpl extends React.Component<ITimelapseFormProps> {
   handleChange = (event: React.FormEvent) => {
     event.preventDefault();
 
-    const formTimelapseDuration = this.props.form.getFieldValue("timelapseDuration") as number;
-    const formTimelapseDurationUnit = this.props.form.getFieldValue("timelapseDurationUnit");
-    const formRecordingDuration = this.props.form.getFieldValue("recordingDuration") as number;
+    const formRecordingDuration: number = +this.props.form.getFieldValue("recordingDuration");
     const formRecordingDurationUnit = this.props.form.getFieldValue("recordingDurationUnit");
-    const formFps = this.props.form.getFieldValue("fps") as number;
-    const formNumFrames = this.props.form.getFieldValue("numFrames") as number;
-    const formIntervalSec = this.props.form.getFieldValue("intervalSec") as number;
+    const formFps: number = this.props.form.getFieldValue("fps");
+    const formNumFrames: number = +this.props.form.getFieldValue("numFrames");
+    const formIntervalSec: number = +this.props.form.getFieldValue("intervalSec");
+
+    const formTimelapseDuration: number = +this.props.form.getFieldValue("timelapseDuration");
+    const formTimelapseDurationUnit = this.props.form.getFieldValue("timelapseDurationUnit");
+    const formTimelapseDurationSec: number = +moment.duration(formTimelapseDuration, formTimelapseDurationUnit).as("seconds");
 
     console.log(
       `
       formTimelapseDuration=${formTimelapseDuration}
+      formTimelapseDurationSec=${formTimelapseDurationSec}
       formTimelapseDurationUnit=${formTimelapseDurationUnit}
       formRecordingDuration=${formRecordingDuration}
       formRecordingDurationUnit=${formRecordingDurationUnit}
@@ -126,17 +130,20 @@ class TimelapseFormImpl extends React.Component<ITimelapseFormProps> {
       `
     );
 
-    const formTimelapseDurationSec = moment.duration(formTimelapseDuration, formTimelapseDurationUnit).as("seconds");
-    const newNumFrames = formFps * formTimelapseDurationSec;
+    const numFrames = formFps * formTimelapseDurationSec;
+    const recordingDurationSec = numFrames * formIntervalSec;
+    const recordingDuration = moment.duration(recordingDurationSec, "seconds").as(formRecordingDurationUnit);
 
-    const newRecordingDurationSec = newNumFrames * formIntervalSec;
-    const newRecordingDuration = moment.duration(newRecordingDurationSec, "seconds").as(formRecordingDurationUnit);
+    this.props.form.setFieldsValue({
+      recordingDuration,
+      numFrames
+    });
 
     console.log(
       `
-      newNumFrames=${newNumFrames}
-      newRecordingDurationSec=${newRecordingDurationSec}
-      newRecordingDuration=${newRecordingDuration}
+      numFrames=${numFrames}
+      recordingDurationSec=${recordingDurationSec}
+      recordingDuration=${recordingDuration}
       `
     );
 
