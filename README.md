@@ -1,6 +1,6 @@
 # Timelapse Tools
 
-Visit [http://zdwolfe.github.io/timelapse-tools].
+Visit [zdwolfe.github.io/timelapse-tools](http://zdwolfe.github.io/timelapse-tools).
 
 
 ## Development
