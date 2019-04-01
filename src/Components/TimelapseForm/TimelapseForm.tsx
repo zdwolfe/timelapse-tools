@@ -1,8 +1,6 @@
 import React from 'react';
 
-import {
-  Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Button, AutoComplete,
-} from 'antd';
+import { Form, Input, Select, Button } from 'antd';
 import {FormComponentProps} from "antd/es/form";
 
 
@@ -11,11 +9,6 @@ interface ITimelapseFormProps extends FormComponentProps {
 
 class TimelapseFormImpl extends React.Component<ITimelapseFormProps> {
   public render() {
-    const formItemLayout = {
-      labelCol: { span: 6 },
-      wrapperCol: { span: 14 },
-    };
-
     const { getFieldDecorator } = this.props.form;
 
     const timelapseDurationUnitSelector = getFieldDecorator('durationUnit', {
@@ -52,16 +45,16 @@ class TimelapseFormImpl extends React.Component<ITimelapseFormProps> {
     );
 
     return (
-      <Form {...formItemLayout} onSubmit={this.handleSubmit}>
-        <Form.Item label={"Timelapse duration"}>
+      <Form labelCol={{ span: 8 }} wrapperCol={{ span: 14 }} onSubmit={this.handleSubmit}>
+        <Form.Item label={"Video Duration"}>
           {getFieldDecorator('timelapseDuration', {
             rules: [{ required: false, message: 'Please input the expected timelapse length.' }],
           })(
-            <Input addonAfter={timelapseDurationUnitSelector} style={{ width: '100%' }} />
+            <Input autoFocus={true} addonAfter={timelapseDurationUnitSelector} style={{ width: '100%' }} />
           )}
         </Form.Item>
 
-        <Form.Item label={"Capture time"}>
+        <Form.Item label={"Capture Duration"}>
           {getFieldDecorator('recordingDuration', {
             rules: [{ required: false, message: 'Please input the expected recording time.' }],
           })(
@@ -69,7 +62,7 @@ class TimelapseFormImpl extends React.Component<ITimelapseFormProps> {
           )}
         </Form.Item>
 
-        <Form.Item label={"FPS"}>
+        <Form.Item label={"Frames / sec"}>
           {getFieldDecorator('fps', {
             rules: [{ required: false, message: 'Please input the expected fps.' }],
           })(
@@ -85,18 +78,29 @@ class TimelapseFormImpl extends React.Component<ITimelapseFormProps> {
           )}
         </Form.Item>
 
-        <Form.Item label={"Capture Frame Interval"}>
+        <Form.Item label={"Capture Interval"}>
           {getFieldDecorator('intervalSec', {
             rules: [{ required: false, message: 'Please input the expected frame interval.' }],
           })(
             <Input addonAfter={recordingIntervalUnitSelector} style={{ width: '100%' }}  />
           )}
         </Form.Item>
+
+        <Form.Item
+          wrapperCol={{ span: 24, offset: 0 }}
+        >
+          <Button type="primary" size="large" htmlType="submit">
+            Submit
+          </Button>
+        </Form.Item>
+
       </Form>
     );
   }
 
   handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+
     const formTimelapseDuration = this.props.form.getFieldValue("timelapseDuration");
     const formTimelapseDurationUnit = this.props.form.getFieldValue("timelapseDurationUnit");
     const formRecordingDuration = this.props.form.getFieldValue("RecordingDuration");
